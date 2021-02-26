@@ -61,7 +61,7 @@ export const getters = {
   currentCluster(state, getters) {
     return getters['management/byId'](MANAGEMENT.CLUSTER, state.clusterId);
   },
-
+ 
   currentProduct(state, getters) {
     const active = getters['type-map/activeProducts'];
 

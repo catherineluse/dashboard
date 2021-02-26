@@ -1068,6 +1068,73 @@ istio:
   tracing: Enabled Jaeger Tracing (limited)
   v1Warning: Please uninstall the current Istio version in the <code>istio-system</code> namespace before attempting to install this version.
 
+istioGateway:
+  info: Gateway describes a load balancer operating at the edge of the mesh receiving incoming or outgoing HTTP/TCP connections.
+  name:
+    label: Name
+    placeholder: "e.g. mygateway"
+  namespace:
+    label: Namespace
+    placeholder: default
+  newNamespace:
+    label: "Add to a new namespace"
+  selector:
+    info: "One or more labels that indicate a specific set of pods/VMs on which this gateway configuration should be applied."
+    label: Selector
+  server:
+    label: "Server"
+    info: "Server describes the properties of the proxy on a given load balancer port."
+    portNumber:
+      label: "Port Number"
+      info: "The Port on which the proxy should listen for incoming connections."
+      placeholder: "e.g. 80"
+    portName:
+      label: "Port Name"
+      placeholder: "e.g. http"
+    portProtocol:
+      label: "Port Protocol"
+      info: "The protocol exposed on the port. Must be one of HTTP|HTTPS|GRPC|HTTP2|MONGO|TCP|TLS. TLS implies the connection will be routed based on the SNI header to the destination without terminating the TLS connection."
+      placeholder: HTTP
+    hosts:
+      label: "Hosts"
+      info: "One or more hosts exposed by this gateway. A VirtualService must be bound to the gateway and must have one or more hosts that match the hosts specified in a server."
+  mode:
+    label: Mode
+    info: "Optional: Indicates whether connections to this port should be secured using TLS. The value of this field determines how TLS is enforced."
+    options:
+      passthrough: PASSTHROUGH
+      simple: SIMPLE
+      mutual: MUTUAL
+      autoPassthrough: AUTO_PASSTHROUGH
+      istioMutual: ISTIO_MUTUAL
+  httpsRedirect:
+    label: "HTTPS Redirect"
+    info: "If yes, the load balancer will send a 301 redirect for all http connections, asking the clients to use HTTPS."
+    options:
+      yes: Yes
+      no: No
+  serverCertificate:
+    label: "Server Certificate"
+    info: "REQUIRED if mode is SIMPLE or MUTUAL. The path to the file holding the server-side TLS certificate to use."
+    placeholder: "e.g. /etc/istio/ingressgateway-certs/tls.crt"
+  privateKey:
+    label: "Private Key"
+    info: "REQUIRED if mode is SIMPLE or MUTUAL. The path to the file holding the server’s private key."
+    placeholder: " e.g. /etc/istio/ingressgateway-certs/tls.key"
+  caCertificate:
+    label: "CA Certificate"
+    info: "REQUIRED if mode is MUTUAL. The path to a file containing certificate authority certificates to use in verifying a presented client side certificate."
+    placeholder: "e.g. /etc/istio/ingressgateway-ca-certs/ca-chain.ce"
+  credentialName:
+    label: "Credential Name"
+    info: "The name of the secret that holds the TLS certs including the CA certificates. The secret (of type generic) should contain the following keys and values: key: <privateKey> and cert: <serverCert>. For mutual TLS, cacert: <CACertificate> can be provided in the same secret or a separate secret named <secret>-cacert. Secret of type tls for server certificates along with ca.crt key for CA certificates is also supported. Only one of server certificates and CA certificate or credentialName can be specified."
+    placeholder: "e.g. myssl"
+  subjectAlternativeName:
+    label: "Subject Alternative Name"
+    info: "A list of alternate names to verify the subject identity in the certificate presented by the client."
+    placeholder: "e.g. example.com"
+  
+
 labels:
   addLabel: Add Label
   addSetLabel: Add/Set Label
@@ -3238,6 +3305,11 @@ typeLabel:
     {count, plural,
       one { Route }
       other { Routes }
+    }
+  networking.istio.io.gateway: |-
+    {count, plural,
+      one { Gateway }
+      other { Gateways }
     }
   'management.cattle.io.cluster': |-
     {count, plural,

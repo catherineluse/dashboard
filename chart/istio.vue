@@ -1,12 +1,12 @@
 <script>
-import debounce from 'lodash/debounce';
-import jsyaml from 'js-yaml';
-import Checkbox from '@/components/form/Checkbox';
-import YamlEditor from '@/components/YamlEditor';
-import { mapGetters } from 'vuex';
-import FileSelector from '@/components/form/FileSelector';
-import Tab from '@/components/Tabbed/Tab';
-import Banner from '@/components/Banner';
+import debounce from "lodash/debounce";
+import jsyaml from "js-yaml";
+import Checkbox from "@/components/form/Checkbox";
+import YamlEditor from "@/components/YamlEditor";
+import { mapGetters } from "vuex";
+import FileSelector from "@/components/form/FileSelector";
+import Tab from "@/components/Tabbed/Tab";
+import Banner from "@/components/Banner";
 
 const defaultOverlayFile = `#apiVersion: install.istio.io/v1alpha1
 #kind: IstioOperator
@@ -55,18 +55,18 @@ export default {
     FileSelector,
     YamlEditor,
     Tab,
-    Banner
+    Banner,
   },
 
   hasTabs: true,
 
-  props:   {
+  props: {
     value: {
-      type:    Object,
+      type: Object,
       default: () => {
         return {};
-      }
-    }
+      },
+    },
   },
 
   data() {
@@ -90,88 +90,139 @@ export default {
           return null;
         }
       },
-      set: debounce(function(neu) {
+      set: debounce(function (neu) {
         try {
           const obj = jsyaml.safeLoad(neu);
 
           Object.assign(this.value, obj);
-        } catch (e) {
-
-        }
-      }, 500)
+        } catch (e) {}
+      }, 500),
     },
 
-    ...mapGetters({ t: 'i18n/t' })
+    ...mapGetters({ t: "i18n/t" }),
   },
 
   methods: {
     update() {
-      this.$emit('input', this.value);
+      this.$emit("input", this.value);
     },
 
     valuesChanged(value) {
       try {
         jsyaml.safeLoad(value);
         if (value === defaultOverlayFile) {
-          value = '';
+          value = "";
         } else {
           this.overlayFile = value;
         }
         this.value.overlayFile = value;
-      } catch (e) {
-      }
+      } catch (e) {}
     },
 
     onFileSelected(value) {
-      this.$refs['yaml-editor'].updateValue(value);
-    }
-  }
+      this.$refs["yaml-editor"].updateValue(value);
+    },
+  },
 };
 </script>
 
 <template>
   <div>
-    <Tab name="components" :label="t('istio.titles.components') ">
+    <Tab
+      name="components"
+      :label="t('istio.titles.components') "
+    >
       <div class="row">
-        <div v-if="value.cni" class="col span-4">
-          <Checkbox v-model="value.cni.enabled" :label="t('istio.cni')" @input="update" />
+        <div
+          v-if="value.cni"
+          class="col span-4"
+        >
+          <Checkbox
+            v-model="value.cni.enabled"
+            :label="t('istio.cni')"
+            @input="update"
+          />
         </div>
-        <div v-if="value.ingressGateways" class="col span-4">
-          <Checkbox v-model="value.ingressGateways.enabled" :label="t('istio.ingressGateway')" />
+        <div
+          v-if="value.ingressGateways"
+          class="col span-4"
+        >
+          <Checkbox
+            v-model="value.ingressGateways.enabled"
+            :label="t('istio.ingressGateway')"
+          />
         </div>
-        <div v-if="value.egressGateways" class="col span-4">
-          <Checkbox v-model="value.egressGateways.enabled" :label="t('istio.egressGateway')" />
+        <div
+          v-if="value.egressGateways"
+          class="col span-4"
+        >
+          <Checkbox
+            v-model="value.egressGateways.enabled"
+            :label="t('istio.egressGateway')"
+          />
         </div>
       </div>
       <div class="row">
-        <div v-if="value.pilot" class="col span-4">
-          <Checkbox v-model="value.pilot.enabled" :label="t('istio.pilot')" />
+        <div
+          v-if="value.pilot"
+          class="col span-4"
+        >
+          <Checkbox
+            v-model="value.pilot.enabled"
+            :label="t('istio.pilot')"
+          />
         </div>
-        <div v-if="value.policy" class="col span-4">
-          <Checkbox v-model="value.policy.enabled" :label="t('istio.policy')" />
+        <div
+          v-if="value.policy"
+          class="col span-4"
+        >
+          <Checkbox
+            v-model="value.policy.enabled"
+            :label="t('istio.policy')"
+          />
         </div>
-        <div v-if="value.telemetry" class="col span-4">
-          <Checkbox v-model="value.telemetry.enabled" :label="t('istio.telemetry')" />
+        <div
+          v-if="value.telemetry"
+          class="col span-4"
+        >
+          <Checkbox
+            v-model="value.telemetry.enabled"
+            :label="t('istio.telemetry')"
+          />
         </div>
       </div>
       <div class="row">
-        <div v-if="value.kiali" class="col span-4">
-          <Checkbox v-model="value.kiali.enabled" :label="t('istio.kiali')" />
+        <div
+          v-if="value.kiali"
+          class="col span-4"
+        >
+          <Checkbox
+            v-model="value.kiali.enabled"
+            :label="t('istio.kiali')"
+          />
         </div>
-        <div v-if="value.tracing" class="col span-4">
-          <Checkbox v-model="value.tracing.enabled" :label="t('istio.tracing')" />
+        <div
+          v-if="value.tracing"
+          class="col span-4"
+        >
+          <Checkbox
+            v-model="value.tracing.enabled"
+            :label="t('istio.tracing')"
+          />
         </div>
         <div class="col span-4">
         </div>
       </div>
     </Tab>
 
-    <Tab :label="t('istio.customOverlayFile.label')" name="overlay" @active="$refs['yaml-editor'].refresh()">
+    <Tab
+      :label="t('istio.customOverlayFile.label')"
+      name="overlay"
+      @active="$refs['yaml-editor'].refresh()"
+    >
       <div class="custom-overlay">
         <Banner color="info">
-          <span
-            v-html="t('istio.customOverlayFile.tip', {}, true)"
-          ></span>
+          <span v-html="t('istio.customOverlayFile.tip', {}, true)"></span>
         </Banner>
         <YamlEditor
           ref="yaml-editor"
@@ -179,31 +230,35 @@ export default {
           :value="overlayFile"
           @onInput="valuesChanged"
         />
-        <FileSelector class="role-primary  btn-sm" :label="t('generic.readFromFile')" @selected="onFileSelected" />
+        <FileSelector
+          class="role-primary  btn-sm"
+          :label="t('generic.readFromFile')"
+          @selected="onFileSelected"
+        />
       </div>
     </Tab>
   </div>
 </template>
 
 <style lang='scss'>
-  $yaml-height: 200px;
+$yaml-height: 200px;
 
-  .custom-overlay {
-    &>DIV{
-      color: var(--input-label);
-      &>*{
-        padding: 3px;
-      }
-    }
-
-    & .yaml-editor{
-      flex: 1;
-      min-height: $yaml-height;
-      & .code-mirror .CodeMirror {
-        position: initial;
-        height: auto;
-        min-height: $yaml-height;
-      }
+.custom-overlay {
+  & > DIV {
+    color: var(--input-label);
+    & > * {
+      padding: 3px;
     }
   }
+
+  & .yaml-editor {
+    flex: 1;
+    min-height: $yaml-height;
+    & .code-mirror .CodeMirror {
+      position: initial;
+      height: auto;
+      min-height: $yaml-height;
+    }
+  }
+}
 </style>
